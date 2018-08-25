@@ -4,8 +4,7 @@ require 'json'
 module HL7Parser
 
     def initialize()
-        # @segment_delim = "\r"
-        @segment_delim = "\n"
+        @segment_delim = "\r"
         @field_delim = "|"
         @element_delim = "^"
         @repeat_delim = "~"
@@ -29,15 +28,19 @@ module HL7Parser
 
     def parse(raw_message)
         begin
+            raw_message.gsub!("\n", "\r")
             segments = raw_message.split(@segment_delim)
             result = Array[]
         
             segments.each do |seg|
-                # if /\x1c/.match(seg) then
-                #     break
-                # end
-                # seg_encoded = seg.encode("UTF-8", "ISO-2022-JP")
-                seg_encoded = seg
+                if /\x1c/.match(seg) then
+                    break
+                end
+                if seg.encoding().to_s != "UTF-8" then
+                    seg_encoded = seg.force_encoding("ISO-2022-JP").encode("UTF-8")
+                else
+                    seg_encoded = seg  
+                end                
                 fields = seg_encoded.split(@field_delim)
                 seg_id = fields[0]
                 seg_json = get_segment(seg_id)
@@ -66,22 +69,7 @@ module HL7Parser
                     elm_jsons = Array[]
 
                     repeat_fields.each do |rep|
-                        # elm_json = get_datatype(type_id)
-                        # elm_array = rep.split(@element_delim)
-                        # elm_idx = 0
-
-                        # if elm_json.instance_of?(Array) then
-                        #     elm_json.each do |elm|
-                        #         elm.delete("nho_name")
-                        #         elm.store("value", elm_array[elm_idx])                                
-                        #         elm_idx += 1
-                        #     end
-                        #     elm_jsons.push(elm_json)
-                        # else
-                        #     elm_jsons.push(rep)
-                        # end
-
-                        ele_value = element_split(rep, type_id, @element_delim)
+                        ele_value = element_parse(rep, type_id, @element_delim)
                         if !ele_value.nil? then
                             elm_jsons.push(ele_value)
                         end
@@ -96,12 +84,12 @@ module HL7Parser
             end
             return result
                 
-        rescue => ex
-            puts ex
+        rescue => exception
+            puts exception
         end
     end
 
-    def element_split(raw_data, type_id, delim)
+    def element_parse(raw_data, type_id, delim)
         elm_json = get_datatype(type_id)
         elm_array = raw_data.split(delim)
         elm_idx = 0
@@ -116,17 +104,14 @@ module HL7Parser
                 end
                 elm.store("value", value)
                 if !value.empty? then
-                    array_data = element_split(value, elm["type"], "&")
+                    array_data = element_parse(value, elm["type"], "&")
                     if !array_data.nil? then
                         elm.store("array_data", array_data)
                     end
                 end
-                # elm.store("array_data", element_split(value, elm["type"], delim))
                 elm_idx += 1
             end
             return elm_json
-        # else
-        #     return raw_data
         end
     end
 

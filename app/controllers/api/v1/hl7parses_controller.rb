@@ -23,7 +23,7 @@ class Api::V1::Hl7parsesController < ApplicationController
 
         # s = s.to_s.encode("ISO-2022-JP", "UTF-8")
 
-        puts s.encoding()
+        # puts s.encoding()
         # puts s
         # s = s.force_encoding("ISO-2022-JP")
 
