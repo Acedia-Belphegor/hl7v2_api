@@ -1,9 +1,8 @@
 # encoding: UTF-8
 require 'json'
 
-module HL7Parser
-
-    def initialize()
+class HL7Parser
+    def initialize(raw_message = nil)
         # セグメントターミネータ
         @segment_delim = "\r"
         # フィールドセパレータ
@@ -13,25 +12,59 @@ module HL7Parser
         # 反復セパレータ
         @repeat_delim = "~"
 
-        # データ型を定義したJSONファイルを読み込む
-        @hl7_datatypes = open("lib/assets/json/HL7_DATATYPE.json") do |io|
+        # データ型を定義したJSONファイルを読み込む        
+        @hl7_datatypes = open(Rails.root.join('lib/assets/json/HL7_DATATYPE.json')) do |io|
+        # @hl7_datatypes = open("./json/HL7_DATATYPE.json") do |io|
             JSON.load(io)
         end
 
-        # セグメントを定義したJSONファイルを読み込む
-        @hl7_segments = open("lib/assets/json/HL7_SEGMENT.json") do |io|
+        # セグメントを定義したJSONファイルを読み込む        
+        @hl7_segments = open(Rails.root.join('lib/assets/json/HL7_SEGMENT.json')) do |io|
+        # @hl7_segments = open("./json/HL7_SEGMENT.json") do |io|
             JSON.load(io)
-        end    
+        end
+
+        # 引数にRawデータが設定されている場合はパースする
+        if !raw_message.nil? then
+            parse(raw_message)
+            @raw_message = raw_message
+        end
     end
 
     # セグメントオブジェクトを返す
-    def get_segment(id)
+    def get_new_segment(id)
         Marshal.load(Marshal.dump(@hl7_segments[id]))
     end
 
     # データ型オブジェクトを返す
-    def get_datatype(id)
+    def get_new_datatype(id)
         Marshal.load(Marshal.dump(@hl7_datatypes[id]))
+    end
+
+    # JSONパースされたメッセージを返す
+    def get_parsed_message()
+        return @parsed_message
+    end
+
+    def get_parsed_segments(segment_id)
+        return @parsed_message.select{ |seg| seg[0]['value'] == segment_id }
+    end
+
+    def get_parsed_fields(segment_id, field_name)
+        segments = get_parsed_segments(segment_id)
+        if !segments.nil? then
+            return segments.first.select{ |fld| fld['name'] == field_name }
+        end
+    end
+
+    def get_parsed_value(segment_id, field_name)
+        segments = get_parsed_segments(segment_id)
+        if !segments.nil? then
+            field = segments.first.find{ |fld| fld['name'] == field_name }
+            if !field.nil? then
+                return field['value']
+            end
+        end
     end
 
     # HL7メッセージ(Raw Data)をJSON形式にパースする
@@ -57,7 +90,7 @@ module HL7Parser
                 # フィールド分割
                 fields = seg_encoded.split(@field_delim)
                 seg_id = fields[0]
-                seg_json = get_segment(seg_id)
+                seg_json = get_new_segment(seg_id)
                 seg_idx = 0
 
                 seg_json.each do |fld|
@@ -104,6 +137,7 @@ module HL7Parser
                 end                
                 result.push(seg_json)
             end
+            @parsed_message = result
             return result
                 
         rescue => exception
@@ -112,8 +146,9 @@ module HL7Parser
         end
     end
 
+    private
     def element_parse(raw_data, type_id, delim)
-        elm_json = get_datatype(type_id)
+        elm_json = get_new_datatype(type_id)
         elm_array = raw_data.split(delim)
         elm_idx = 0
 

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" moodCode="EVN" xmlns="urn:hl7-org:v3">
+  <typeId root="2.16.840.1.113883.2.2.3.2" extension="POCD_HD000040JP00" />
+  <templateId root="2.16.840.1.113883.10.20.22.1.9" />
+  <id root="2.16.840.1.113883.2.2.3.6.100.1" extension="4021" />
+  <code code="11506-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Progress Note" />
+  <title>医師記録</title>
+  <effectiveTime value="20161028" />
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" />
+  <setId root="2.16.840.1.113883.2.2.3.6.100.2" extension="123456" />
+  <recordTarget typeCode="RCT" contextControlCode="OP">
+    <patientRole classCode="PAT">
+      <id root="2.16.840.1.113883.2.12.2.1" extension="99990010" assigningAuthorityName="紹介元" />
+      <patient classCode="PSN" determinerCode="INSTANCE">
+        <name use="IDE">
+          <family>テスト</family>
+          <given>患者１０</given>
+        </name>
+        <name use="SYL">
+          <family>テスト</family>
+          <given>カンジャ１０</given>
+        </name>
+        <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" />
+        <birthTime value="19791101" />
+      </patient>
+    </patientRole>
+  </recordTarget>
+  <author typeCode="AUT" contextControlCode="OP">
+    <time value="20161028143618" />
+    <assignedAuthor classCode="ASSIGNED">
+      <id root="2.16.840.1.113883.2.12.1" extension="D100" />
+      <addr>
+        <country>JP</country>
+        <postalCode>716-0033</postalCode>
+        <streetName>南町53番地</streetName>
+        <city>高梁市</city>
+        <state>岡山県</state>
+      </addr>
+      <telecom value="tel:0866223636" use="WP" />
+      <telecom value="fax:0866220536" use="WP" />
+      <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+        <name use="IDE">
+          <family>電子</family>
+          <given>太郎</given>
+        </name>
+      </assignedPerson>
+      <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+        <id root="2.16.840.1.113883.2.2.99.4" extension="01" />
+        <name>医療法人清梁会 高梁中央病院</name>
+      </representedOrganization>
+    </assignedAuthor>
+  </author>
+  <custodian typeCode="CST">
+    <assignedCustodian classCode="ASSIGNED">
+      <representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+        <id root="1.2.392.200250.2.2.1" extension="01" />
+        <name>医療法人清梁会 高梁中央病院</name>
+        <telecom value="tel:0866223636" use="WP" />
+        <addr>
+          <country>JP</country>
+          <postalCode>716-0033</postalCode>
+          <streetName>南町53番地</streetName>
+          <city>高梁市</city>
+          <state>岡山県</state>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+  <component>
+    <structuredBody classCode="DOCBODY" moodCode="EVN">
+      <component>
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.21.2.2" />
+          <code code="61150-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Subjective" />
+          <title>S)主観</title>
+          <text mediaType="text/x-hl7-text+xml">主観的な情報のこと。
+利用者・家族等が訴えたことや、その時の事実のまま記載する。</text>
+        </section>
+      </component>
+      <component>
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.21.2.1" />
+          <code code="61149-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Objective" />
+          <title>O)客観</title>
+          <text mediaType="text/x-hl7-text+xml">客観的な情報のこと。
+援助者の目で見たこと、聴いたこと、体験したこと。その事実だけを記載する。</text>
+          <entry>
+            <observationMedia classCode="OBS" moodCode="EVN">
+              <value representation="B64" mediaType="text/rtf">e1xydGYxXGFuc2lcYW5zaWNwZzkzMlxkZWZmMHtcZm9udHRibHtcZjBcZm5pbFxmY2hhcnNldDEyOCBNZWlyeW8gVUk7fXtcZjFcZm5pbFxmY2hhcnNldDEyOCBcJzgyXCc2Y1wnODJcJzcyIFwnODNcJzUzXCc4M1wnNTZcJzgzXCc2MlwnODNcJzRlO319CntcY29sb3J0YmwgO1xyZWQyNTVcZ3JlZW4wXGJsdWUxMjg7fQpcdmlld2tpbmQ0XHVjMVxwYXJkXGxhbmcxMDQxXGYwXGZzMjBcJzhiXCc3MVwnOGFcJ2NmXCc5M1wnNDlcJzgyXCdjOFwnOGZcJ2VlXCc5NVwnZjFcJzgyXCdjY1wnODJcJ2IxXCc4MlwnYzZcJzgxXCc0MlxwYXIKXCc4OVwnODdcJzhmXCc5NVwnOGVcJ2QyXCc4MlwnY2NcJzk2XCdkYVwnODJcJ2M1XCc4Y1wnYTlcJzgyXCdiZFwnODJcJ2IxXCc4MlwnYzZcJzgxXCc0MVwnOTJcJ2FlXCc4MlwnYTJcJzgyXCdiZFwnODJcJ2IxXCc4MlwnYzZcJzgxXCc0MVwnOTFcJ2NjXCc4Y1wnYjFcJzgyXCdiNVwnODJcJ2JkXCc4MlwnYjFcJzgyXCdjNlwnODFcJzQyXGNmMVwnODJcJ2JiXCc4MlwnY2NcJzhlXCc5NlwnOGVcJ2MwXCc4MlwnYmVcJzgyXCdhZlxjZjBcJzgyXCdmMFwnOGJcJzRjXCc4ZFwnZGFcJzgyXCdiN1wnODJcJ2U5XCc4MVwnNDJcZjFcZnMyMFxwYXIKfQo=</value>
+            </observationMedia>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.22.2.8" />
+          <code code="51848-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Assessments" />
+          <title>A)評価</title>
+          <text mediaType="text/x-hl7-text+xml">入手した客観的な事実、それに対する援助者の評価、課題分析をさす。
+客観的な情報に加味された援助者の専門的な判断結果をいう。</text>
+          <entry>
+            <observationMedia classCode="OBS" moodCode="EVN">
+              <value representation="B64" mediaType="text/rtf">e1xydGYxXGFuc2lcYW5zaWNwZzkzMlxkZWZmMHtcZm9udHRibHtcZjBcZm5pbFxmY2hhcnNldDEyOCBNZWlyeW8gVUk7fXtcZjFcZm5pbFxmY2hhcnNldDEyOCBcJzgyXCc2Y1wnODJcJzcyIFwnODNcJzUzXCc4M1wnNTZcJzgzXCc2MlwnODNcJzRlO319CntcY29sb3J0YmwgO1xyZWQwXGdyZWVuMFxibHVlMjU1O30KXHZpZXdraW5kNFx1YzFccGFyZFxsYW5nMTA0MVxmMFxmczIwXCc5M1wnZmNcJzhlXCdlOFwnODJcJ2I1XCc4MlwnYmRcJzhiXCc3MVwnOGFcJ2NmXCc5M1wnNDlcJzgyXCdjOFwnOGVcJzk2XCc4ZVwnYzBcJzgxXCc0MVwnODJcJ2JiXCc4MlwnZWFcJzgyXCdjOVwnOTFcJ2NlXCc4MlwnYjdcJzgyXCdlOVwnODlcJzg3XCc4ZlwnOTVcJzhlXCdkMlwnODJcJ2NjXCc5NVwnNWRcJzg5XCdiZlwnODFcJzQxXCc4OVwnZGJcJzkxXCdlOFwnOTVcJ2FhXCc5MFwnY2RcJzgyXCdmMFwnODJcJ2IzXCc4MlwnYjdcJzgxXCc0MlxwYXIKXCc4YlwnNzFcJzhhXCdjZlwnOTNcJzQ5XCc4MlwnYzhcJzhmXCdlZVwnOTVcJ2YxXCc4MlwnYzlcJzg5XCdjMVwnOTZcJ2ExXCc4MlwnYjNcJzgyXCdlYVwnODJcJ2JkXCc4OVwnODdcJzhmXCc5NVwnOGVcJ2QyXCc4MlwnY2NcY2YxXCc5MFwnZWFcJzk2XCdlNVwnOTNcJzQ5XCc4MlwnYzhcJzk0XCdiYlwnOTJcJzY2XCc4Y1wnOGJcJzg5XCdjYVxjZjBcJzgyXCdmMFwnODJcJ2EyXCc4MlwnYTRcJzgxXCc0MlxmMVxmczIwXHBhcgp9Cg==</value>
+            </observationMedia>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section classCode="DOCSECT" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.22.2.8" />
+          <code code="51848-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Assessments" />
+          <title>P)計画</title>
+          <text mediaType="text/x-hl7-text+xml">上記の事実、結果に基づいた計画の作成、あるいは必要な修正事項など。</text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.2.2.1.5.13" />
+          <code code="11450-4" displayName="プロブレム" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+          <title>プロブレム</title>
+          <text>
+            <list>
+              <item>#1 Churg-strauss syndorome</item>
+              <item>#2 Cronic heart failure</item>
+              <item>#3 慢性C 型肝炎</item>
+              <item>#4 肝内腫瘤</item>
+              <item>#5 高血圧</item>
+              <item>#6 胆石症</item>
+            </list>
+          </text>
+        </section>      
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
