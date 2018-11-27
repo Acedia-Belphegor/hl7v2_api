@@ -11,6 +11,11 @@ class Api::Hl7cda::PrescriptionController < ApplicationController
         raw_message = raw_message.force_encoding("utf-8")
         cda = HL7PrescriptionCda.new(raw_message)        
         render xml: cda.generate_cda()
+        # respond_to do |format|
+        #     format.xml do
+        #         send_data render_to_string, filename: 'HL7CDA.xml', type: 'application/xml; charset=utf-8'
+        #     end
+        # end
     end
   
     def create

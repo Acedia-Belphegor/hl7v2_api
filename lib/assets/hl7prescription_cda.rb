@@ -70,6 +70,10 @@ class HL7PrescriptionCda
         author = generate_author()
         @clinical_document.author.push(author)
 
+        # 文書管理者
+        custodian = generate_custodian()
+        @clinical_document.custodian = custodian
+
         # ボディ部
         component = generate_component()
         @clinical_document.component = component
@@ -285,6 +289,17 @@ class HL7PrescriptionCda
         return author
     end
 
+    # 文書管理者
+    def generate_custodian()
+        custodian = Cda::Custodian.new()
+        assigned_custodian = Cda::AssignedCustodian.new()
+        represented_custodian_organization = Cda::CustodianOrganization.new()
+        represented_custodian_organization.null_flavor = 'NA'
+        assigned_custodian.represented_custodian_organization = represented_custodian_organization
+        custodian.assigned_custodian = assigned_custodian
+        return custodian
+    end
+
     # ボディ部
     def generate_component()
         component2 = Cda::Component2.new()
@@ -351,6 +366,9 @@ class HL7PrescriptionCda
             substance_administration.class_code = 'SBADM'
             substance_administration.mood_code = 'RQO'
 
+            # 一回量
+            dose_quantity = Cda::IVL_PQ.new()
+
             # 分量
             dose_check_quantity = Cda::RTO_PQ_PQ.new()
             dose_check_quantity.numerator = Cda::PQ.new()
@@ -411,6 +429,8 @@ class HL7PrescriptionCda
                                     case element['value']
                                     when 'HOT' then
                                         code.code_system = '1.2.392.100495.20.2.74'
+                                    when 'YJ' then
+                                        code.code_system = '1.2.392.100495.20.2.73'
                                     else
                                         code.code_system = ''
                                     end
@@ -419,6 +439,34 @@ class HL7PrescriptionCda
                             manufactured_labeled_drug.code = code
                             manufactured_product.manufactured_labeled_drug = manufactured_labeled_drug
                             consumable.manufactured_product = manufactured_product
+                        when 'Give Amount - Minimum' then
+                            # 与薬量－最小
+                            dose_quantity.value = field['value']
+                        when 'Give Units' then
+                            # 与薬単位
+                            field['array_data'].first.each do |element|
+                                case element['name']
+                                when 'Text' then
+                                    dose_quantity.unit = element['value']
+                                end
+                            end
+                        when "Provider's Administration Instructions" then
+                            # 依頼者の投薬指示
+                            text_array = Array[]
+                            field['array_data'].each do |fld|
+                                fld.each do |element|
+                                    case element['name']
+                                    when 'Text' then
+                                        if !element['value'].empty? then
+                                            text_array.push(element['value'])
+                                        end                                        
+                                        break
+                                    end
+                                end
+                            end
+                            if !text_array.empty? then
+                                supply.text = text_array.join('，')
+                            end                            
                         when 'Give Indication' then
                             # 剤型情報
                             code = Cda::CD.new()
@@ -452,10 +500,10 @@ class HL7PrescriptionCda
                             end
                             field['array_data'].first.each do |element|
                                 case element['name']
-                                when 'Identifier' then
-                                    # 単位(entryRelationship/supply/quantity/@unit)
+                                when 'Text' then
+                                    # 単位(総投与量)
                                     quantity.unit = element['value']
-                                    # 単位(doseCheckQuantity/numerator/@unit)
+                                    # 単位(分量)
                                     dose_check_quantity.numerator.unit = element['value']
                                 end
                             end
@@ -472,6 +520,10 @@ class HL7PrescriptionCda
                                     end
                                 end
                             end
+                            # テキスト情報
+                            sditem = Cda::StrucDocItem.new()
+                            sditem._text = dose_check_quantity.numerator.value.to_s + ' ' + dose_check_quantity.numerator.unit
+                            sdlist.item.push(sditem)
                         end
                     end
                 when 'TQ1' then
@@ -513,6 +565,11 @@ class HL7PrescriptionCda
                                         when 'Text' then
                                             # 標準用法コード名称
                                             event.display_name = e['value']
+
+                                            # テキスト情報
+                                            sditem = Cda::StrucDocItem.new()
+                                            sditem._text = e['value']
+                                            sdlist.item.push(sditem)
                                         end
                                     end
                                     break
@@ -527,6 +584,7 @@ class HL7PrescriptionCda
             sdtext = Cda::StrucDocText.new()
             sdtext.list = sdlist
             section.text = sdtext
+            substance_administration.dose_quantity = dose_quantity
             substance_administration.dose_check_quantity = dose_check_quantity
             substance_administration.consumable = consumable
             entry_relationship.supply = supply

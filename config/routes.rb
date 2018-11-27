@@ -16,6 +16,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :prescription
-  root to: 'prescription#create'
+  namespace :api, {format: 'json'} do
+    namespace :hl7 do
+      resources :parse
+    end
+  end
+
+  resources :parse
+  root to: 'parse#create'
 end
